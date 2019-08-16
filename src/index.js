@@ -5,8 +5,12 @@ import "antd/dist/antd.min.css";
 import { Row, Modal, Col, Input, Button } from 'antd';
 
 function Square(props) {
+    var style = {
+        color: props.color
+    }
     return (
         <button className="square"
+            style={style}
             onClick={props.onClick}
         >
             {props.value}
@@ -17,9 +21,11 @@ function Square(props) {
 class Board extends React.Component {
 
     renderSquare(i) {
+
         return (
             <Square
                 value={this.props.squares[i]}
+                color={this.props.colors[i]}
                 onClick={() => this.props.onClick(i)}
             />
         );
@@ -53,7 +59,9 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
+                colors: Array(9).fill('black'),
                 squares: Array(9).fill(null),
+                location: [null, null]
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -68,7 +76,7 @@ class Game extends React.Component {
 
         const moves = history.map((step, move) => {
             const desc = move ?
-                'Go to move #' + move :
+                'Go to move #' + move + ' at: (' + step.location + ')' :
                 'Go to game start';
             return (
                 <li key={move}>
@@ -78,7 +86,11 @@ class Game extends React.Component {
         })
         let status;
         if (winner) {
-            status = 'Winner is: ' + winner;
+            status = 'Winner is: ' + (this.state.xIsNext ? 'O' : 'X');
+            current.colors = Array(9).fill('black') ;
+            for (let x in winner) {
+                current.colors[winner[x]] = 'blue'
+            }
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
@@ -90,9 +102,11 @@ class Game extends React.Component {
                     <Col offset={5}>
                         <Button type="primary" onClick={() => this.setState({ addProjectOpen: true })}>
                             新增项目</Button></Col>
+
                     <Col className="game-board" offset={10}>
                         <Board
                             squares={current.squares}
+                            colors={current.colors}
                             onClick={(i) => this.handleClick(i)}
                         />
                         <div className="game-info">
@@ -129,9 +143,13 @@ class Game extends React.Component {
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
+        const colors = Array(9).fill('black');
+        colors[i] = 'blue';
         this.setState({
             history: history.concat([{
                 squares: squares,
+                colors: colors,
+                location: [parseInt(i / 3) + 1, i - 3 * parseInt(i / 3) + 1],
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
@@ -160,15 +178,17 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+            var colors = Array(9).fill('black');
+            for (let x in lines[i]) {
+                colors[x] = 'blue'
+            };
+            return lines[i];
         }
     }
     return null;
 }
-// ========================================
 
 ReactDOM.render(
-    <Game />
-    ,
+    <Game />,
     document.getElementById('root')
 );
