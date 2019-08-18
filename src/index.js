@@ -24,6 +24,7 @@ class Board extends React.Component {
 
         return (
             <Square
+                key={i}
                 value={this.props.squares[i]}
                 color={this.props.colors[i]}
                 onClick={() => this.props.onClick(i)}
@@ -37,34 +38,15 @@ class Board extends React.Component {
             for (var j = 0; j < 3; j++) {
                 var row = [];
                 for (var i = 0; i < 3; i++) {
-                    row.push(this.renderSquare(3 * j + i))
+                    row.push(this.renderSquare(3 * j + i));
                 }
-                col.push(<div className="board-row"> {row}</div>)
+                col.push(<div className="board-row" key={j}>{row}</div>);
             }
-            return <div>{col}</div>
+            return <div>{col}</div>;
         }
         return (
             list()
         )
-        // return (
-        //     <div>
-        //         <div className="board-row">
-        //             {this.renderSquare(0)}
-        //             {this.renderSquare(1)}
-        //             {this.renderSquare(2)}
-        //         </div>
-        //         <div className="board-row">
-        //             {this.renderSquare(3)}
-        //             {this.renderSquare(4)}
-        //             {this.renderSquare(5)}
-        //         </div>
-        //         <div className="board-row">
-        //             {this.renderSquare(6)}
-        //             {this.renderSquare(7)}
-        //             {this.renderSquare(8)}
-        //         </div>
-        //     </div>
-        // );
     }
 }
 
@@ -103,8 +85,10 @@ class Game extends React.Component {
             status = 'Winner is: ' + (this.state.xIsNext ? 'O' : 'X');
             current.colors = Array(9).fill('black');
             for (let x in winner) {
-                current.colors[winner[x]] = 'blue'
+                current.colors[winner[x]] = 'blue';
             }
+        } else if (!current.squares.includes(null)) {
+            status = 'No Body Win !!!';
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
