@@ -32,25 +32,39 @@ class Board extends React.Component {
     }
 
     render() {
+        var list = () => {
+            var col = [];
+            for (var j = 0; j < 3; j++) {
+                var row = [];
+                for (var i = 0; i < 3; i++) {
+                    row.push(this.renderSquare(3 * j + i))
+                }
+                col.push(<div className="board-row"> {row}</div>)
+            }
+            return <div>{col}</div>
+        }
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
-        );
+            list()
+        )
+        // return (
+        //     <div>
+        //         <div className="board-row">
+        //             {this.renderSquare(0)}
+        //             {this.renderSquare(1)}
+        //             {this.renderSquare(2)}
+        //         </div>
+        //         <div className="board-row">
+        //             {this.renderSquare(3)}
+        //             {this.renderSquare(4)}
+        //             {this.renderSquare(5)}
+        //         </div>
+        //         <div className="board-row">
+        //             {this.renderSquare(6)}
+        //             {this.renderSquare(7)}
+        //             {this.renderSquare(8)}
+        //         </div>
+        //     </div>
+        // );
     }
 }
 
@@ -87,7 +101,7 @@ class Game extends React.Component {
         let status;
         if (winner) {
             status = 'Winner is: ' + (this.state.xIsNext ? 'O' : 'X');
-            current.colors = Array(9).fill('black') ;
+            current.colors = Array(9).fill('black');
             for (let x in winner) {
                 current.colors[winner[x]] = 'blue'
             }
@@ -178,10 +192,6 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            var colors = Array(9).fill('black');
-            for (let x in lines[i]) {
-                colors[x] = 'blue'
-            };
             return lines[i];
         }
     }
