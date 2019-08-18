@@ -61,6 +61,7 @@ class Game extends React.Component {
             }],
             stepNumber: 0,
             xIsNext: true,
+            isHistoryDesc: false,
             addProjectOpen: false,
         };
     }
@@ -109,7 +110,9 @@ class Game extends React.Component {
                         />
                         <div className="game-info">
                             <div>{status}</div>
-                            <ol>{moves}</ol>
+                            <div><button type="primary" onClick={() => this.setState({ isHistoryDesc: !this.state.isHistoryDesc })}>
+                                {this.state.isHistoryDesc ? '升序' : '降序'}</button></div>
+                            <ol reversed={this.state.isHistoryDesc}>{(this.state.isHistoryDesc ? moves.reverse() : moves)}</ol>
                         </div>
                     </Col>
 
